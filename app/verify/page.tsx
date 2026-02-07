@@ -13,11 +13,7 @@ const VerifyPage = () => {
   const [step, setStep] = useState<1 | 2>(1);
 
  
-  const shellRef = useRef<HTMLDivElement | null>(null);
-  const cardRef = useRef<HTMLDivElement | null>(null);
-  const step1Ref = useRef<HTMLDivElement | null>(null);
-  const step2Ref = useRef<HTMLDivElement | null>(null);
-  const progressDotRef = useRef<HTMLDivElement | null>(null);
+
 
   const captions = useMemo(
     () => ({
