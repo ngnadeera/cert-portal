@@ -41,11 +41,16 @@ const VerifyPage = () => {
     setLoading(true);
     setResult(null);
 
+
+
+
     const res = await fetch("api/verify", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ certificateId }),
     });
+    
+
 
     const data = await res.json();
     setResult({ ok: res.ok, data });
@@ -143,7 +148,7 @@ const VerifyPage = () => {
     const issuedAt = data.issuedAt ?? data.issueDate ?? "—";
     const expiresAt = data.expiresAt ?? data.expiryDate ?? "—";
     const timeLeft =
-      data.timeLeft ?? data.timeRemaining ?? data.validityRemaining ?? null;
+      data.daysRemaining ?? null;
     const message = data.message ?? data.error ?? null;
 
     return { status, holder, product, level, issuedAt, expiresAt, timeLeft, message };
@@ -348,7 +353,10 @@ const VerifyPage = () => {
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <div className="text-xs text-white/60">Certificate ID</div>
                   <div className="mt-1 font-mono text-sm text-white/90">
-                    {certificateId || "—"}
+                                        {result
+                    ? certificateId
+                    : "Certificate Not Found. Please check the ID and try again."
+                    } 
                   </div>
                 </div>
 
@@ -369,30 +377,28 @@ const VerifyPage = () => {
 
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <div className="text-xs text-white/60">Issue Date</div>
-                  <div className="mt-1 text-sm text-white/90">{display.issuedAt}</div>
+                  <div className="mt-1 text-sm text-white/90">{(display.issuedAt).split("T")[0]}</div>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <div className="text-xs text-white/60">Expiry Date</div>
-                  <div className="mt-1 text-sm text-white/90">{display.expiresAt}</div>
+                  <div className="mt-1 text-sm text-white/90">{(display.issuedAt).split("T")[0]}</div>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:col-span-2">
                   <div className="text-xs text-white/60">Validity Remaining</div>
                   <div className="mt-1 text-sm text-white/90">
-                    {display.timeLeft ? display.timeLeft : "—"}
+                    {display.timeLeft ? display.timeLeft : "—"} days
                   </div>
                 </div>
               </div>
 
-              {display.message && (
+              {/* {display.message && (
                 <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-sm font-semibold">Note</div>
-                  <div className="mt-1 text-sm text-white/70">
-                    {String(display.message)}
-                  </div>
+                  <div className="text-sm font-semibold">Badge</div>
+                  <Image src={"/assets/certificate.png"} alt="certificate" width={500} height={400} className="my-2" />
                 </div>
-              )}
+              )} */}
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button

@@ -9,7 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@azure/identity": "^4.13.0",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
     "gsap": "^3.14.2",
+    "isomorphic-fetch": "^3.0.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
