@@ -360,7 +360,11 @@ const VerifyPage = () => {
                   </div>
                 </div>
 
-                
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-xs text-white/60">Certificate Holder</div>
+                  <div className="mt-1 text-sm text-white/90">{display.holder}</div>
+                </div>
+
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <div className="text-xs text-white/60">Product</div>
                   <div className="mt-1 text-sm text-white/90">{display.product}</div>
