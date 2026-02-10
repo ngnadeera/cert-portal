@@ -9,6 +9,20 @@ const VerifyPage = () => {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
+
+  const CERT_ID_REGEX = /^PCRT-[A-Z]{3}-\d{2}-\d{4}$/;
+
+  const [idError, setIdError] = useState<string>("");
+
+   function normalizeCertId(v: string) {
+    return v.trim().toUpperCase();
+    }
+
+    function isValidCertId(v: string) {
+    return CERT_ID_REGEX.test(normalizeCertId(v));
+    }
+
+
   
   const [step, setStep] = useState<1 | 2>(1);
 
@@ -40,6 +54,13 @@ const VerifyPage = () => {
     e.preventDefault();
     setLoading(true);
     setResult(null);
+
+    const normalized = normalizeCertId(certificateId);
+
+  if (!isValidCertId(normalized)) {
+    setIdError("Invalid Certificate ID format. Example: PCRT-PCG-26-0123");
+    return; 
+  }
 
 
 
@@ -283,23 +304,44 @@ const VerifyPage = () => {
                   <input
                     className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white/90 placeholder:text-white/35 outline-none focus:border-cyan-300/40 focus:ring-2 focus:ring-cyan-300/10"
                     value={certificateId}
-                    onChange={(e) => setCertificateId(e.target.value)}
+                    onChange={(e) => {
+                        const v = normalizeCertId(e.target.value);
+                        setCertificateId(v);
+
+                       
+                        if (!v) {
+                            setIdError("");
+                        } else if (!isValidCertId(v)) {
+                            setIdError("Invalid Certificate ID format. Please insert a valid ID");
+                        } else {
+                            setIdError("");
+                        }
+                        }}
+
                     placeholder="PCRT-PCG-26-0123"
                     autoComplete="off"
                     spellCheck={false}
                   />
+
+                  {idError && (
+  <div className="mt-2 text-sm text-rose-300">
+    {idError}
+  </div>
+)}
+
+
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <button
+                  <button 
                     className="inline-flex items-center justify-center rounded-xl bg-gradient-to-b from-blue-500 to-cyan-400 px-5 py-3 font-semibold text-slate-950 hover:opacity-95 active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed"
                     type="submit"
-                    disabled={loading || !certificateId.trim()}
+                    disabled={loading || !isValidCertId(certificateId)}
                     aria-busy={loading}
                   >
                     {loading ? (
                       <span className="inline-flex items-center gap-2">
-                        <span className="h-4 w-4 rounded-full border-2 border-slate-950/30 border-t-slate-950 animate-spin" />
+                        <span className="h-4 w-4 rounded-full border-2 border-slate-950/30 border-t-slate-950 animate-spin "  />
                         Verifying…
                       </span>
                     ) : (
@@ -431,7 +473,7 @@ const VerifyPage = () => {
           </div>
 
           <div className="mt-3 text-xs text-white/55">
-            Tip: Later you can add QR verification using a token in the URL for stronger validation.
+            Disclaimer: Valid only for the specified product and level. Subject to Paraqum certification terms and conditions.
           </div>
         </section>
       </div>
