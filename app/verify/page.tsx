@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Image from "next/image";
+import description from "../lib/description";
 
 const VerifyPage = () => {
   const [certificateId, setCertificateId] = useState("");
@@ -23,6 +24,7 @@ const VerifyPage = () => {
     }
 
 
+
   
   const [step, setStep] = useState<1 | 2>(1);
 
@@ -40,7 +42,7 @@ const VerifyPage = () => {
         "Verify a digital certificate using the Certificate ID. Results show holder name, product, level, issue date, expiry date, and current status.",
       step1Title: "Enter Certificate ID",
       step1Hint:
-        "Use the Certificate ID printed on the certificate (e.g., PCRT-PCG-26-0123).",
+        "Use the Certificate ID printed on the certificate ",
       step2Title: "Verification Result",
       step2Hint:
         "Certificates marked Expired or Revoked are invalid for verification.",
@@ -58,7 +60,7 @@ const VerifyPage = () => {
     const normalized = normalizeCertId(certificateId);
 
   if (!isValidCertId(normalized)) {
-    setIdError("Invalid Certificate ID format. Example: PCRT-PCG-26-0123");
+    setIdError("Invalid Certificate ID format.");
     return; 
   }
 
@@ -171,8 +173,10 @@ const VerifyPage = () => {
     const timeLeft =
       data.daysRemaining ?? null;
     const message = data.message ?? data.error ?? null;
+    const noteTitle = description.find((d) => "Level " + d.level === data.level)?.title ?? "";
+    const note = description.find((d) => "Level " + d.level === data.level)?.description ?? "";
 
-    return { status, holder, product, level, issuedAt, expiresAt, timeLeft, message };
+    return { status, holder, product, level, issuedAt, expiresAt, timeLeft, message, noteTitle, note };
   }, [result]);
 
   const statusTone = useMemo(() => {
@@ -318,7 +322,7 @@ const VerifyPage = () => {
                         }
                         }}
 
-                    placeholder="PCRT-PCG-26-0123"
+                    placeholder="Enter the Certificate ID "
                     autoComplete="off"
                     spellCheck={false}
                   />
@@ -435,12 +439,17 @@ const VerifyPage = () => {
                 </div>
               </div>
 
-              {/* {display.message && (
+              {display.level && (
                 <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-sm font-semibold">Badge</div>
-                  <Image src={"/assets/certificate.png"} alt="certificate" width={500} height={400} className="my-2" />
+                  <div className="text-xs text-white/60 mb-2">Note</div>
+                  <p>{display.level} : {display.noteTitle}</p>
+
+                   {Array.isArray(display.note) && (display.note).map((n: string, i: number) => (
+                    <p key={i} className="text-sm text-white/90 mt-1">- {n}</p>
+                   ))}
+
                 </div>
-              )} */}
+              )}
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
