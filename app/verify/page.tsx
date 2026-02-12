@@ -445,7 +445,7 @@ const VerifyPage = () => {
                   <p>{display.level} : {display.noteTitle}</p>
 
                    {Array.isArray(display.note) && (display.note).map((n: string, i: number) => (
-                    <p key={i} className="text-sm text-white/90 mt-1">- {n}</p>
+                    <p key={i} className="text-[14px] text-white/90 mt-1">- {n}</p>
                    ))}
 
                 </div>
